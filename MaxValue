@@ -1,0 +1,67 @@
+public class Maxusing_Segmenttree {
+
+    static class Node{
+        int startinterval;
+        int endinterval;
+        int data;
+        Node left;
+        Node right;
+
+        Node(int startinterval,int endinterval){
+            this.startinterval = startinterval;
+            this.endinterval = endinterval;
+        }
+
+    }
+    Node root;
+    public   Maxusing_Segmenttree(int arr[]){
+        this.root = construct(arr,0,arr.length-1);
+    }
+
+
+    private Node construct(int arr[],int start,int end){
+        if (start == end){
+            Node leaf = new Node(start,end);
+            leaf.data = arr[start];
+            return leaf;
+        }
+        Node node = new Node(start,end);
+        int mid = (start+end)/2;
+
+
+       node.left = this.construct(arr, start, mid);
+       node.right = this.construct(arr, mid + 1, end);
+
+
+
+        //node.data = node.left.data + node.right.data;
+        node.data = Math.max(node.left.data, node.right.data);
+
+        return node;
+    }
+
+    public int Query(int qsi, int qei){
+        return  this.Query(this.root, qsi, qei);
+    }
+    private int Query(Node node, int qsi, int qei){
+
+        if (node.startinterval >= qsi && node.endinterval <= qei) {
+            return node.data;
+        } else if (node.startinterval > qei || node.endinterval < qsi) {
+            return Integer.MAX_VALUE;
+        } else {
+            return Math.max(Query(node.left, qsi, qei), Query(node.right, qsi, qei));
+        }
+
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {3, 8, 6, 7, -2, -8, 4, 9};
+        Maxusing_Segmenttree tree = new Maxusing_Segmenttree(arr);
+       // tree.display();
+        //System.out.println(tree.query(1, 6));
+        System.out.println(tree.Query(0,7));
+
+    }
+
+}
